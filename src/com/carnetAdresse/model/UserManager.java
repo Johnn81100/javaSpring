@@ -14,7 +14,7 @@ public class UserManager {
             //connexion
             Statement smt = connexion.createStatement();
             //requête
-            String req = "INSERT INTO users(nom,prenom,email,pwd) VALUE (?,?,?,?)";
+            String req = "INSERT INTO users(nom,prenom,email,password) VALUE (?,?,?,?)";
             //préparer la requête
             PreparedStatement preparedStatement = connexion.prepareStatement(req);
             //binder les 4 paramètres
@@ -45,7 +45,7 @@ public class UserManager {
             //connexion
             Statement smt = connexion.createStatement();
             //requête
-            String req = "SELECT id, nom, prenom,email, pwd FROM users WHERE email = ?";
+            String req = "SELECT id, nom, prenom,email, password FROM users WHERE email = ?";
             //préparer la requête
             PreparedStatement preparedStatement = connexion.prepareStatement(req);
             //bind paramètre email
@@ -61,7 +61,7 @@ public class UserManager {
                     verif.setNom(rs.getString("nom"));
                     verif.setPrenom(rs.getString("prenom"));
                     verif.setEmail(rs.getString("email"));
-                    verif.setPassword(rs.getString("pwd"));
+                    verif.setPassword(rs.getString("password"));
                 }
             }
             smt.close();
