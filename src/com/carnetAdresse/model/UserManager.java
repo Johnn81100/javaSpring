@@ -75,7 +75,6 @@ public class UserManager {
 
     public static boolean updateUser(User user){
         boolean statut = false;
-        User updateUser =  new User();
         try{
             Statement smt = connexion.createStatement();
             String sql = "UPDATE users SET nom = ?, prenom = ? WHERE email = ?";
@@ -85,7 +84,7 @@ public class UserManager {
             preparedStatement.setString(3, user.getEmail());
             int nbrLigne = preparedStatement.executeUpdate();
             if(nbrLigne == 1) {
-           /*     updateUser.setNom(user.getNom());
+                /*updateUser.setNom(user.getNom());
                 updateUser.setPrenom(user.getPrenom());
                 updateUser.setEmail(user.getEmail());
                 updateUser.setPassword(user.getPassword());*/
