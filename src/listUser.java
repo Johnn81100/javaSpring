@@ -1,13 +1,12 @@
 import com.carnetAdresse.model.User;
 import com.carnetAdresse.model.UserManager;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
-import static java.util.function.Predicate.isEqual;
 
 public class listUser extends JDialog {
     private JPanel JpMain;
@@ -21,8 +20,7 @@ public class listUser extends JDialog {
     private JButton btAdd;
     private JButton btClose;
     private JPasswordField passwordField1;
-
-    private Boolean isRedeaySave ;
+    private JButton btUpdate;
 
     public listUser(JDialog parent){
 
@@ -41,7 +39,13 @@ public class listUser extends JDialog {
         btAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                getData();
+                getData(false);
+            }
+        });
+        btUpdate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getData(true);
             }
         });
 
@@ -54,8 +58,9 @@ public class listUser extends JDialog {
         //indiquer si la fenêtre est visible ou pas au chargement
         setVisible(true);
 
+
     }
-    private void getData() {
+    private void getData(boolean isUpdate) {
         ArrayList<JTextField> jt = new ArrayList<JTextField>();
         jt.add(nom);
         jt.add(prenom);
@@ -85,18 +90,45 @@ public class listUser extends JDialog {
         }
         else{
 
-            User user = new User(jt.get(0).getText(),jt.get(1).getText(),jt.get(2).getText(), String.valueOf(passwordField1.getPassword()));
+
+            String hashed_password = BCrypt.hashpw(String.valueOf(passwordField1.getPassword()),BCrypt.gensalt());
+            User user = new User(jt.get(0).getText(),jt.get(1).getText(),jt.get(2).getText(),hashed_password);
+
             User  userBdd =  UserManager.findUser(user);
-            if(userBdd.getNom() == null){
-                System.out.println("ok");
-                UserManager.addUser(user);
-            }
-            else {
-                JOptionPane.showMessageDialog(this,
-                        " Utilisateur déjà enregistré ",
-                        "Essaie encore",
-                        JOptionPane.ERROR_MESSAGE);
-                return;
+
+            if(!isUpdate ) {
+                if (userBdd.getNom() == null) {
+                    UserManager.addUser(user);
+                    JOptionPane.showMessageDialog(this,
+                            " l'utilisateur a bien été enregistré ",
+                            "Essaie encore",
+                            JOptionPane.INFORMATION_MESSAGE);
+                   return;
+
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            " Utilisateur déjà enregistré ",
+                            "Essaie encore",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+            }else{
+               if (userBdd.getNom() != null) {
+                    UserManager.updateUser(user);
+                   JOptionPane.showMessageDialog(this,
+                           " l'utilisateur a bien été modifié ",
+                           "Essaie encore",
+                           JOptionPane.INFORMATION_MESSAGE);
+                   return;
+                }
+               else{
+                   JOptionPane.showMessageDialog(this,
+                           " l'utilisateur n'a pas été trouvé ",
+                           "Essaie encore",
+                           JOptionPane.ERROR_MESSAGE);
+                   return;
+               }
             }
         }
 
@@ -104,3 +136,6 @@ public class listUser extends JDialog {
     }
 
 }
+
+
+

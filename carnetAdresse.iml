@@ -16,5 +16,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="spring-security-crypto-6.2.1" level="project" />
   </component>
 </module>

@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
 
 
-                listUser register = new listUser(null);
+                Home register = new Home(null);
 
 
     }
